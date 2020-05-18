@@ -1,0 +1,21 @@
+package com.example.repair
+
+import androidx.lifecycle.ViewModel
+import com.example.repair.data.model.User
+
+/**
+ * @program: Repair
+ *
+ * @description: 用户共享模板
+ *
+ * @author: hsy
+ *
+ * @create: 2020-05-16 21:14
+ **/
+class MyUser{
+
+    companion object{
+        lateinit var user: User
+    }
+
+}
