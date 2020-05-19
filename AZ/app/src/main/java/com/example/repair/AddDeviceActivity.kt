@@ -1,6 +1,8 @@
 package com.example.repair
 
+import android.app.AlertDialog
 import android.content.ContentUris
+import android.content.DialogInterface
 import android.content.Intent
 import android.database.Cursor
 import android.net.Uri
@@ -8,6 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.DocumentsContract
 import android.provider.MediaStore
+import android.view.View.GONE
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -16,9 +19,10 @@ import com.bumptech.glide.Glide
 import com.example.repair.data.LoginDataSource
 import com.example.repair.data.model.Device
 import com.example.repair.ui.notifications.NotificationsViewModel
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_add_device.*
 import kotlinx.android.synthetic.main.content_add_device.*
+import kotlinx.android.synthetic.main.content_add_device.name
+import kotlinx.android.synthetic.main.content_add_device.type
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,53 +33,137 @@ import java.io.File
 class AddDeviceActivity : AppCompatActivity() {
     val ALBUM = 2
     var message: String? = null;
+    var device: Device? = null
+    private lateinit var notificationsViewModel: NotificationsViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_device)
-
-        fab.setOnClickListener { view ->
-            if (name.text.length == 0) {
-                Toast.makeText(this, "名称不能为空", Toast.LENGTH_SHORT).show();
-            } else {
-
-
-                CoroutineScope(Dispatchers.Main).launch {
-
-                    var device = Device(
-                        dept = dept.text.toString(),
-                        loc = loc.text.toString(),
-                        lv = spinner.selectedItem.toString(),
-                        type = type.text.toString(),
-                        name = name.text.toString(),
-                        img = message ?: "无",
-                        dj = dj.text.toString(),
-                        wh = wh.text.toString()
-                    )
-                    var _li = withContext(Dispatchers.IO) {
-
-                        LoginDataSource().addDevices(device)
-                    }
-
-
-                    ViewModelProvider(this as App).get(NotificationsViewModel::class.java).devices.value!!.add(_li)
-                    finish()
-
-                }
-
-
-            }
-        }
+        var id = intent.getIntExtra("id", 0);
+        notificationsViewModel =
+            ViewModelProvider(this.application as App).get(NotificationsViewModel::class.java)
+        val ctype =
+            arrayOf("A", "B", "C")
+        var adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, ctype);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);     //设置下拉列表框的下拉选项样式
+        spinner.setAdapter(adapter);
         chooseImg.setOnClickListener {
             var intent: Intent = Intent()
             intent.setAction("android.intent.action.GET_CONTENT")
             intent.setType("image/*")
             startActivityForResult(intent, ALBUM)
         }
-        val ctype =
-            arrayOf("A", "B", "C")
-        var adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, ctype);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);     //设置下拉列表框的下拉选项样式
-        spinner.setAdapter(adapter);
+        for (i in notificationsViewModel.devices.value!!) {
+            if (i.id == id) {
+                device = i
+                dept.setText(device!!.dept)
+                loc.setText(device!!.loc)
+                for (i in 0..2) {
+                    if (device!!.type.equals(ctype[i])) {
+                        spinner.setSelection(i)
+                    }
+                }
+                type.setText(device!!.type)
+                name.setText(device!!.name)
+                dj.setText(device!!.dj)
+                wh.setText(device!!.wh)
+                if (device!!.img.equals("无")) {
+                    device_img.setImageResource(R.drawable.device)
+                } else
+                    Glide.with(this).load("${MyUser.host}images/${device!!.id}\$${device!!.img}")
+                        .into(device_img)
+                chooseImg.setText("删除本设备")
+                chooseImg.setOnClickListener {
+                    val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+                    builder.setTitle("确认")
+                    builder.setMessage("确认删除该设备吗")
+                    builder.setPositiveButton("是", object : DialogInterface.OnClickListener {
+                        override fun onClick(dialog: DialogInterface?, which: Int) {
+                            CoroutineScope(Dispatchers.Main).launch {
+
+                                withContext(Dispatchers.IO) {
+
+                                    LoginDataSource().deleteDevices(device!!.id)
+                                }
+
+                                ViewModelProvider(application as App).get(NotificationsViewModel::class.java)
+                                    .remove(device!!.id)
+                                finish()
+                            }
+
+
+                        }
+                    })
+                    builder.setNegativeButton("否", null)
+                    builder.show()
+                }
+
+            }
+
+        }
+        if(MyUser.user.type.equals("管理员")) {
+            fab.setOnClickListener {
+
+                if (name.text.length == 0) {
+                    Toast.makeText(this, "名称不能为空", Toast.LENGTH_SHORT).show();
+                } else {
+
+
+                    CoroutineScope(Dispatchers.Main).launch {
+
+                        if (device != null) {
+                            device = Device(
+                                id = device!!.id,
+                                dept = dept.text.toString(),
+                                loc = loc.text.toString(),
+                                lv = spinner.selectedItem.toString(),
+                                type = type.text.toString(),
+                                name = name.text.toString(),
+                                img = message ?: "无",
+                                dj = dj.text.toString(),
+                                wh = wh.text.toString()
+                            )
+                            withContext(Dispatchers.IO) {
+
+                                LoginDataSource().addDevices(device!!)
+                            }
+
+                            ViewModelProvider(application as App).get(NotificationsViewModel::class.java)
+                                .change(device!!)
+                        } else {
+                            device = Device(
+                                dept = dept.text.toString(),
+                                loc = loc.text.toString(),
+                                lv = spinner.selectedItem.toString(),
+                                type = type.text.toString(),
+                                name = name.text.toString(),
+                                img = message ?: "无",
+                                dj = dj.text.toString(),
+                                wh = wh.text.toString()
+                            )
+                            var _li = withContext(Dispatchers.IO) {
+
+
+                                LoginDataSource().addDevices(device!!)
+                            }
+
+                            ViewModelProvider(application as App).get(NotificationsViewModel::class.java)
+                                .add(
+                                    _li
+                                )
+
+                        }
+                        finish()
+
+
+                    }
+
+
+                }
+            }
+        }else{
+            fab.visibility=GONE
+            chooseImg.visibility=GONE
+        }
 
     }
 

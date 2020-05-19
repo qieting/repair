@@ -15,7 +15,9 @@ import com.example.repair.data.model.User
 class MyUser{
 
     companion object{
+        @JvmStatic
         lateinit var user: User
+        val  host ="http:192.168.2.102:8080/"
     }
 
 }

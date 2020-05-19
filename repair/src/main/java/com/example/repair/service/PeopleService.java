@@ -19,6 +19,10 @@ public interface PeopleService {
     Device addDevice(Device device, MultipartFile file);
     List<Device> getDevices();
     List<User> getUser();
+    void deleteDecvice(Integer id);
+    void changeDevice(Device device);
+    void deleteMessage(Integer id);
+
     List<MyCheck> getCheck();
     MyCheck changeMyCheck(MyCheck myCheck ,MultipartFile file);
     Repair changeRepari(Repair repair,MultipartFile file);

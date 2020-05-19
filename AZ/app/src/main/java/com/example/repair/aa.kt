@@ -43,6 +43,10 @@ interface AA {
     @POST("device")
     fun addDevice(@Part("device") requestBody: RequestBody): Call<Device>
 
+    @DELETE("device")
+    fun deleteDevice(@Query("id") id: Int): Call<ResponseBody>
+
+
     @GET("mycheck")
     fun getChecks(): Call<MutableList<MyCheck>>
 
@@ -50,8 +54,9 @@ interface AA {
     @POST("mycheck")
     fun addCheck(@Part("check") requestBody: RequestBody, @Part file: MultipartBody.Part): Call<MyCheck>
 
+    @Multipart
     @POST("mycheck")
-    fun changeCheck(@Body requestBody: RequestBody): Call<MyCheck>
+    fun changeCheck(@Part("check") requestBody: RequestBody): Call<MyCheck>
 
     @Multipart
     @POST("repair")
@@ -59,7 +64,11 @@ interface AA {
 
     @POST("repair")
     fun changeRepair(@Body requestBody: RequestBody): Call<Repair>
+
     @GET("repair")
     fun getRepairs(): Call<MutableList<Repair>>
+
+    @DELETE("message")
+    fun deleteMessage(@Query("id") id: Int): Call<ResponseBody>
 
 }

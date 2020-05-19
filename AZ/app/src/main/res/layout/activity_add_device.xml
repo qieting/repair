@@ -25,13 +25,12 @@
 
             <ImageView
                 android:id="@+id/device_img"
-                android:background="@drawable/bmob_update_btn_check_on_holo_light"
-                android:layout_marginTop="45dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-            </ImageView>
+                android:layout_height="match_parent"
+                android:layout_marginTop="45dp"
+                android:background="@drawable/device"
+                android:scaleType="fitXY"></ImageView>
             />
-
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -44,6 +43,6 @@
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:srcCompat="@drawable/submit" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

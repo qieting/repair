@@ -53,7 +53,7 @@ class AddUser : AppCompatActivity() {
                     }
 
 
-                    ViewModelProvider(this as App).get(UserViewModel::class.java).users.value!!.add(
+                    ViewModelProvider(application as App).get(UserViewModel::class.java).add(
                         _li
                     )
                     finish()

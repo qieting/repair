@@ -25,9 +25,42 @@ class NotificationsViewModel : ViewModel() {
                 LoginDataSource().getDevices()
             }
 
-            value = _li?:ArrayList()
+            value = _li ?: ArrayList<Device>()
 
         }
     }
     val devices: LiveData<MutableList<Device>> = _list
+
+    fun remove(id: Int) {
+        var lll = _list.value;
+        for (i in lll!!) {
+            if (i.id == id) {
+                lll.remove(i)
+                break
+            }
+        }
+        _list.value = lll
+
+
+    }
+
+    fun change(device: Device) {
+        var lll = _list.value;
+        for (i in lll!!) {
+            if (i.id == device.id) {
+                lll.remove(i)
+                lll.add(device)
+                break
+            }
+        }
+        _list.value = lll
+
+    }
+
+    fun add(device: Device) {
+        var lll = _list.value;
+        lll!!.add(device)
+        _list.value = lll
+
+    }
 }

@@ -1,10 +1,7 @@
 package com.example.repair.service;
 
 import com.example.repair.dao.*;
-import com.example.repair.dao.bena.Device;
-import com.example.repair.dao.bena.MyCheck;
-import com.example.repair.dao.bena.Repair;
-import com.example.repair.dao.bena.User;
+import com.example.repair.dao.bena.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -83,12 +80,17 @@ public class PeopleServiceImpl implements PeopleService {
     @Override
     public Device addDevice(Device device, MultipartFile file) {
 
-        device.setGmtTime(new Date());
-        device = deviceRepository.save(device);
-        if (file != null && !device.getImg().equals("无"))
-            save(file, "images/" + device.getId() + "$" + file.getOriginalFilename());
+        if (device.getId() > 0) {
+            return deviceRepository.save(device);
+        } else {
+            device.setGmtTime(new Date());
+            device = deviceRepository.save(device);
+            if (file != null && !device.getImg().equals("无"))
+                save(file, "images/" + device.getId() + "$" + file.getOriginalFilename());
 
-        return device;
+            return device;
+        }
+
     }
 
     @Override
@@ -102,19 +104,36 @@ public class PeopleServiceImpl implements PeopleService {
     }
 
     @Override
+    public void deleteDecvice(Integer id) {
+        deviceRepository.deleteById(id);
+    }
+
+    @Override
+    public void changeDevice(Device device) {
+        deviceRepository.save(device);
+    }
+
+    @Override
+    public void deleteMessage(Integer id) {
+        messageRepository.deleteById(id);
+    }
+
+    @Override
     public List<MyCheck> getCheck() {
         return checkRepository.findAll();
     }
 
     @Override
     public MyCheck changeMyCheck(MyCheck myCheck, MultipartFile file) {
-        if (myCheck.getState().equals("待接单")) {
-            return checkRepository.save(myCheck);
+        if (myCheck.getState().equals("待接单")&&myCheck.getId()==0) {
+
+            myCheck = checkRepository.save(myCheck);
+            return myCheck;
         } else {
-            if (myCheck.getUser() == null) {
+            if (myCheck.getState().equals("待接单")) {
                 myCheck.setState("待点检");
                 return checkRepository.save(myCheck);
-            } else if (myCheck.getTime() == null) {
+            } else if (myCheck.getImg() == null) {
                 save(file, "images/" + myCheck.getId() + "!" + file.getOriginalFilename());
                 myCheck.setTime(new Date());
                 return checkRepository.save(myCheck);

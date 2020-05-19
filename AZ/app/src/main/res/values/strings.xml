@@ -2,7 +2,7 @@
     <string name="app_name">Repair</string>
     <string name="title_home">维修信息</string>
     <string name="title_dashboard">点检信息</string>
-    <string name="title_notifications">用户管理</string>
+    <string name="title_notifications">设备管理</string>
     <string name="title_activity_login">Sign in</string>
     <string name="prompt_email">请输入手机号</string>
     <string name="prompt_password">Password</string>

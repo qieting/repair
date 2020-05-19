@@ -29,6 +29,22 @@ public class Device implements Serializable {
 
     @Column
     private  String wh;
+    @Column
+    private String type;
+
+    @Column
+    private String dept;
+
+    @Column
+    private String loc;
+
+    @Column
+    private String img;
+
+    @Column
+    private Date gmtTime;
+
+
 
     public String getDj() {
         return dj;
@@ -45,21 +61,6 @@ public class Device implements Serializable {
     public void setWh(String wh) {
         this.wh = wh;
     }
-
-    @Column
-    private String type;
-
-    @Column
-    private String dept;
-
-    @Column
-    private String loc;
-
-    @Column
-    private String img;
-
-    @Column
-    private Date gmtTime;
 
 
     public int getId() {

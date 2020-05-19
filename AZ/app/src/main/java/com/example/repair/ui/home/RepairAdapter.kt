@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.repair.view.*
 class RepairAdapter(var devices: MutableList<Repair>) : RecyclerView.Adapter<MyHoleder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHoleder {
         val inflate = LayoutInflater.from(parent?.context).inflate(
-            R.layout.repair, null
+            R.layout.repair, parent,false
         )
         return MyHoleder(inflate);
     }

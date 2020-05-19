@@ -24,7 +24,7 @@ import kotlinx.android.synthetic.main.user.view.type
 class UserAdapter(var devices: MutableList<User>) : RecyclerView.Adapter<MyHoleder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHoleder {
         val inflate = LayoutInflater.from(parent?.context).inflate(
-            R.layout.user, null
+            R.layout.user, parent,false
         )
         return MyHoleder(inflate);
     }

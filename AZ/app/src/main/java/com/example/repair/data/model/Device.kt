@@ -19,7 +19,6 @@ data class Device(
     var dept: String,
     var loc: String,
     var img: String = "无",
-    var gmtTime: Date? = null,
     var dj: String,
     var wh: String
 )

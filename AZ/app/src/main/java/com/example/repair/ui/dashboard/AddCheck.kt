@@ -9,17 +9,20 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.DocumentsContract
 import android.provider.MediaStore
+import android.view.View.GONE
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.repair.App
+import com.example.repair.MyUser
 import com.example.repair.R
 import com.example.repair.data.LoginDataSource
 import com.example.repair.data.model.Device
 import com.example.repair.data.model.MyCheck
-import com.example.repair.ui.notifications.NotificationsViewModel
 import kotlinx.android.synthetic.main.activity_add_check.*
-import kotlinx.android.synthetic.main.check.*
+import kotlinx.android.synthetic.main.activity_add_check.chooseImg
+import kotlinx.android.synthetic.main.activity_add_check.spinner
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,56 +33,94 @@ class AddCheck : AppCompatActivity() {
 
     var message: String? = null;
     val ALBUM = 2
+    lateinit var device: MyCheck
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_check)
-        chooseImg.setOnClickListener {
-            var intent: Intent = Intent()
-            intent.setAction("android.intent.action.GET_CONTENT")
-            intent.setType("image/*")
-            startActivityForResult(intent, ALBUM)
-        }
-        submit.setOnClickListener {
-            var ID = device_id.text.toString().toInt()
-            val notificationsViewModel =
-                ViewModelProvider(application as App).get(NotificationsViewModel::class.java)
-            var devices = notificationsViewModel.devices.value;
-            if (devices == null) {
-                Toast.makeText(this, "找不到该设备", Toast.LENGTH_SHORT).show();
-            } else {
-                var device: Device? = null;
-                for (i in devices) {
-                    if (i.id == ID) {
-                        device = i;
-                        break
-                    }
+        val id = intent.getIntExtra("id", 0)
+        val notificationsViewModel =
+            ViewModelProvider(application as App).get(DashboardViewModel::class.java)
+        var devices = notificationsViewModel.checks.value;
+        if (devices == null) {
+            Toast.makeText(this, "找不到该点检信息", Toast.LENGTH_SHORT).show();
+        } else {
+            for (i in devices) {
+                if (i.id == id) {
+                    device = i;
+                    break
                 }
-                if (device != null) {
-                    CoroutineScope(Dispatchers.Main).launch {
+            }
 
-                        var _check = MyCheck(
-                            wh = device.wh,
-                            device_id = device.id,
-                            state = "待接单",
-                            dj = device.dj
-                        )
+            chooseImg.setOnClickListener {
+                var intent: Intent = Intent()
+                intent.setAction("android.intent.action.GET_CONTENT")
+                intent.setType("image/*")
+                startActivityForResult(intent, ALBUM)
+            }
+            val ctype =
+                arrayOf("正常", "异常", "停运")
+            var adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, ctype);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);     //设置下拉列表框的下拉选项样式
+            spinner.setAdapter(adapter);
+            submit.setOnClickListener {
+
+                if (device != null) {
+
+                    device.comment =
+                        spinner.selectedItem.toString() + "$" + comment.text.toString()
+                    device.img = message
+                    device.state = "待检验"
+
+
+                    CoroutineScope(Dispatchers.Main).launch {
                         var _li = withContext(Dispatchers.IO) {
 
-                            LoginDataSource().addCheck(_check)
+                            LoginDataSource().addCheck(device)
                         }
-                        ViewModelProvider(this as App).get(DashboardViewModel::class.java).checks.value!!.add(
-                            _li
-                        )
+                        ViewModelProvider(application as App).get(DashboardViewModel::class.java)
+                            .repalce(_li)
                         finish()
 
                     }
 
+                    if (!spinner.selectedItem.toString().equals("正常")) {
+
+                    }
 
                 } else {
                     Toast.makeText(this, "找不到该设备", Toast.LENGTH_SHORT).show();
                 }
             }
         }
+        if (MyUser.user.type.equals("管理员")) {
+            comment.setText(
+                device
+                    .comment!!
+            )
+            comment.isEnabled = false
+
+            spinner.visibility = GONE
+            Glide.with(this).load("${MyUser.host}images/${device!!.id}!${device!!.img}")
+                .into(img)
+            chooseImg.visibility = GONE
+            submit.setText("审核")
+            submit.setOnClickListener {
+                CoroutineScope(Dispatchers.Main).launch {
+
+                    device.state = "已完成"
+                    device.verify = MyUser.user.name
+                    var _li = withContext(Dispatchers.IO) {
+
+                        LoginDataSource().addCheck(device)
+                    }
+                    ViewModelProvider(application as App).get(DashboardViewModel::class.java)
+                        .repalce(_li)
+                    finish()
+                }
+
+            }
+        }
+
     }
 
     //处理返回的事件

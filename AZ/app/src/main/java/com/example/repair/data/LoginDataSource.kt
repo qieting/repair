@@ -76,6 +76,22 @@ class LoginDataSource {
 
     }
 
+    fun deleteDevices(id: Int) {
+        var aa = retrofit.create(
+            AA::class.java
+        )
+        val Mybody: RequestBody =
+            RequestBody.create(MediaType.parse("application/json; charset=utf-8"), "{\"id\":${id}}")
+
+        try {
+            var dd = aa.deleteDevice(id).execute();
+            var dda = dd.body()
+        } catch (e: Throwable) {
+            print(1)
+        }
+
+    }
+
 
     fun addUser(device: User): User {
 
@@ -90,6 +106,7 @@ class LoginDataSource {
         val Mybody: RequestBody =
             RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonData)
 
+
         var dd = aa.addPeople(Mybody).execute();
         return dd.body()
     }
@@ -101,7 +118,7 @@ class LoginDataSource {
         var aa = retrofit.create(
             AA::class.java
         )
-        if (device.img.equals("无")) {
+        if (device.img.equals("无") || device.id > 0) {
             var gson = Gson();
             var jsonData = gson.toJson(device);
 
@@ -146,15 +163,60 @@ class LoginDataSource {
 
 //        var map =HashMap<String,RequestBody>()
 //        map.put("file",File(device.img))
+
+
         var aa = retrofit.create(
             AA::class.java
         )
+
+        if (check.img != null&&check.state.equals("待检验")) {
+            val file = File(check.img)
+
+            check.img = file.name
+
+            var gson = Gson();
+            var jsonData = gson.toJson(check);
+
+            val Mybody: RequestBody =
+                RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonData)
+            val fileRQ = RequestBody.create(MediaType.parse("image/*"), file)
+            val part =
+                MultipartBody.Part.createFormData("file", file.getName(), fileRQ)
+
+            try {
+                var dd = aa.addCheck(Mybody, part).execute();
+                return dd.body()
+            } catch (e: Throwable) {
+                print(1)
+            }
+        }else{
+
+        }
+
         var gson = Gson();
         var jsonData = gson.toJson(check);
         val Mybody: RequestBody =
             RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonData)
+
         var dd = aa.changeCheck(Mybody).execute();
         return dd.body()
+
+
+    }
+
+    fun deleteMessage(id:Int){
+        var aa = retrofit.create(
+            AA::class.java
+        )
+        val Mybody: RequestBody =
+            RequestBody.create(MediaType.parse("application/json; charset=utf-8"), "{\"id\":${id}}")
+
+        try {
+            var dd = aa.deleteDevice(id).execute();
+            var dda = dd.body()
+        } catch (e: Throwable) {
+            print(1)
+        }
     }
 
 
@@ -182,8 +244,6 @@ class LoginDataSource {
         var dd = aa.changeCheck(Mybody).execute();
         return dd.body()
     }
-
-
 
 
     fun logout() {

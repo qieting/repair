@@ -35,4 +35,9 @@ class UserViewModel : ViewModel() {
         }
     }
     val users: LiveData<MutableList<User>> = _list
+
+    fun add(user:User){
+        _list.value!!.add(user)
+        _list.value=_list.value
+    }
 }

@@ -19,12 +19,9 @@ data class MyCheck(
 
     var comment: String? = null,
     var img: String? = null,
-    var user: Int? = null,
-    var time: Date? = null,
+    var user: String? = null,
 
-    //
+
     var state: String,
-
-    var verify: String?=null,
-    var verify_date: String?=null
-)
+    var verify: String? = null
+    )

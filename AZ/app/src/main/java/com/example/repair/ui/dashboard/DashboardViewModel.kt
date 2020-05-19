@@ -22,8 +22,42 @@ class DashboardViewModel : ViewModel() {
             }
 
             value = _li?:ArrayList<MyCheck>()
+            if(value==null){
+                value =ArrayList()
+            }
 
         }
     }
     val checks: LiveData<MutableList<MyCheck>> = _list
+
+
+    fun add(mycheck :MyCheck){
+        if(_list.value==null){
+           _list.value =ArrayList()
+        }
+        try {
+            var lll = _list.value;
+           lll!!.add(mycheck)
+            _list.value = lll
+
+        }catch (e:Throwable){
+            print(1)
+        }
+
+    }
+
+    fun repalce(mycheck: MyCheck){
+        if(_list.value==null){
+            _list.value =ArrayList()
+        }
+        var lll = _list.value;
+        for (i in lll!!) {
+            if (i.id == mycheck.id) {
+                lll.remove(i)
+                lll.add(mycheck)
+                break
+            }
+        }
+        _list.value = lll
+    }
 }
