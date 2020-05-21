@@ -18,7 +18,7 @@ public class Stop implements Serializable {
     private int id;
 
     @Column
-    private  int device_id;
+    private  int device;
 
     @Column
     private Date time;
@@ -27,10 +27,10 @@ public class Stop implements Serializable {
     private  String comment;
 
     @Column
-    private  String downTime;
+    private  int  downTime;
 
     @Column
-    private  String gmtTime;
+    private  Date gmtTime;
 
     public int getId() {
         return id;
@@ -40,13 +40,6 @@ public class Stop implements Serializable {
         this.id = id;
     }
 
-    public int getDevice_id() {
-        return device_id;
-    }
-
-    public void setDevice_id(int device_id) {
-        this.device_id = device_id;
-    }
 
     public Date getTime() {
         return time;
@@ -64,19 +57,27 @@ public class Stop implements Serializable {
         this.comment = comment;
     }
 
-    public String getDownTime() {
+    public int getDownTime() {
         return downTime;
     }
 
-    public void setDownTime(String downTime) {
+    public void setDownTime(int downTime) {
         this.downTime = downTime;
     }
 
-    public String getGmtTime() {
+    public Date getGmtTime() {
         return gmtTime;
     }
 
-    public void setGmtTime(String gmtTime) {
+    public void setGmtTime(Date gmtTime) {
         this.gmtTime = gmtTime;
+    }
+
+    public int getDevice() {
+        return device;
+    }
+
+    public void setDevice(int device) {
+        this.device = device;
     }
 }

@@ -56,6 +56,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="获取短信验证码"
+        android:background="#00A7FD"
         android:id="@+id/messagebtn"
         app:layout_constraintTop_toBottomOf="@id/password"
         app:layout_constraintRight_toRightOf="@id/password"

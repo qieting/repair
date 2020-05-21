@@ -66,6 +66,7 @@ public class PeopleServiceImpl implements PeopleService {
             map.put("status", 1);
             map.put("user", user1);
             map.put("device", getDevices());
+            map.put("dept", getDepts());
         } else {
             map.put("status", 0);
         }
@@ -125,7 +126,7 @@ public class PeopleServiceImpl implements PeopleService {
 
     @Override
     public MyCheck changeMyCheck(MyCheck myCheck, MultipartFile file) {
-        if (myCheck.getState().equals("待接单")&&myCheck.getId()==0) {
+        if (myCheck.getState().equals("待接单") && myCheck.getId() == 0) {
 
             myCheck = checkRepository.save(myCheck);
             return myCheck;
@@ -147,11 +148,17 @@ public class PeopleServiceImpl implements PeopleService {
 
     @Override
     public Repair changeRepari(Repair repair, MultipartFile file) {
-        if (repair.getUser() == null) {
-            repair.setState("待接收");
+        if (repair.getState().equals("待接单")) {
+            repair = repairRepository.save(repair);
+            repair.setState("待接单");
+            Stop stop = new Stop();
+            stop.setDevice(repair.getDevice_Id());
+            stop.setComment(repair.getPart());
+            stop.setGmtTime(new Date());
+            stopRepository.save(stop);
             save(file, "images/" + repair.getId() + "@" + file.getOriginalFilename());
-            return repairRepository.save(repair);
-        } else if (repair.getBgTime() == null) {
+            return repair;
+        } else if (repair.getState().equals("待维修")) {
             repair.setState("待维修");
             return repairRepository.save(repair);
         } else if (repair.getVerify() == null) {
@@ -160,6 +167,13 @@ public class PeopleServiceImpl implements PeopleService {
             return repairRepository.save(repair);
         } else {
             repair.setState("已完成");
+            repair.setVerify_date(new Date());
+            Stop stop = stopRepository.findByDeviceAndTimeIsNull(repair.getDevice_Id());
+            stop.setTime(new Date());
+            int date = (int) (new Date().getTime() - stop.getGmtTime().getTime()) / 1000 / 60;
+            stop.setDownTime(date);
+            stopRepository.save(stop);
+            repair.setDownTime(date + "");
             return repairRepository.save(repair);
         }
     }
@@ -167,6 +181,21 @@ public class PeopleServiceImpl implements PeopleService {
     @Override
     public List<Repair> getRepairs() {
         return repairRepository.findAll();
+    }
+
+    @Override
+    public List<Stop> findStops() {
+        return stopRepository.findAll();
+    }
+
+    @Override
+    public List<Dept> getDepts() {
+        return deptRepository.findAll();
+    }
+
+    @Override
+    public void addDepe(Dept dept) {
+        deptRepository.save(dept);
     }
 
     public void save(MultipartFile file, String path) {

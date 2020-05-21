@@ -20,6 +20,7 @@ import com.example.repair.R
 import com.example.repair.data.LoginDataSource
 import com.example.repair.data.model.Device
 import com.example.repair.data.model.MyCheck
+import com.example.repair.ui.home.AddRepair
 import kotlinx.android.synthetic.main.activity_add_check.*
 import kotlinx.android.synthetic.main.activity_add_check.chooseImg
 import kotlinx.android.synthetic.main.activity_add_check.spinner
@@ -79,11 +80,12 @@ class AddCheck : AppCompatActivity() {
                         }
                         ViewModelProvider(application as App).get(DashboardViewModel::class.java)
                             .repalce(_li)
-                        finish()
+                        if (!spinner.selectedItem.toString().equals("正常")) {
+                            var intent = Intent(this@AddCheck, AddRepair::class.java)
+                            startActivityForResult(intent, 785)
+                        } else
+                            finish()
 
-                    }
-
-                    if (!spinner.selectedItem.toString().equals("正常")) {
 
                     }
 
@@ -134,7 +136,7 @@ class AddCheck : AppCompatActivity() {
                     imageFromAlbum(data)
             }
             else -> {
-
+                finish()
             }
         }
     }

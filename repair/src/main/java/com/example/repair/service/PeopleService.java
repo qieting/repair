@@ -1,9 +1,6 @@
 package com.example.repair.service;
 
-import com.example.repair.dao.bena.Device;
-import com.example.repair.dao.bena.MyCheck;
-import com.example.repair.dao.bena.Repair;
-import com.example.repair.dao.bena.User;
+import com.example.repair.dao.bena.*;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,5 +24,11 @@ public interface PeopleService {
     MyCheck changeMyCheck(MyCheck myCheck ,MultipartFile file);
     Repair changeRepari(Repair repair,MultipartFile file);
     List<Repair> getRepairs();
+
+    List<Stop> findStops();
+
+    List<Dept> getDepts();
+    void addDepe(Dept depe);
+
 
 }

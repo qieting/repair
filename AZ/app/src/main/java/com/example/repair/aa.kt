@@ -1,10 +1,7 @@
 package com.example.repair
 
 
-import com.example.repair.data.model.Device
-import com.example.repair.data.model.MyCheck
-import com.example.repair.data.model.Repair
-import com.example.repair.data.model.User
+import com.example.repair.data.model.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -58,17 +55,19 @@ interface AA {
     @POST("mycheck")
     fun changeCheck(@Part("check") requestBody: RequestBody): Call<MyCheck>
 
+
     @Multipart
     @POST("repair")
     fun addRepair(@Part("repair") requestBody: RequestBody, @Part file: MultipartBody.Part): Call<Repair>
-
+    @Multipart
     @POST("repair")
-    fun changeRepair(@Body requestBody: RequestBody): Call<Repair>
+    fun addRepair(@Part("repair") requestBody: RequestBody): Call<Repair>
 
     @GET("repair")
     fun getRepairs(): Call<MutableList<Repair>>
 
-    @DELETE("message")
-    fun deleteMessage(@Query("id") id: Int): Call<ResponseBody>
+    @GET("stop")
+    fun getStops(): Call<MutableList<Stop>>
+
 
 }

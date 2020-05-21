@@ -18,6 +18,7 @@ class MyUser{
         @JvmStatic
         lateinit var user: User
         val  host ="http:192.168.2.102:8080/"
+        var depts:MutableList<String> =ArrayList()
     }
 
 }

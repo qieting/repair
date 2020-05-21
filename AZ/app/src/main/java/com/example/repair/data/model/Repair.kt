@@ -14,24 +14,23 @@ import java.util.*
 
 data class Repair(
     var id: Int = 0,
-    var device_Id: Device,
+    var device_Id: Int,
     var part: String?,
     var comment: String?,
     var img: String?,
     var user: String?,
 
     var state: String,
-    var downTime: String?,
+    var downTime: String? = null,
 
 
+    var bgTime: Date? = null,
+    var spa: String? = null,
+    var remark: String? = null,
+    var rpImg: String? = null,
+     var rpTime: String?=null,
+    var fuser: String? = null,
 
-    var bgTime: Date?,
-    var spa: String?,
-    var remark: String?,
-    var rpImg: String?,
-    var rpTime: String?,
-    var fuser: String?,
-
-    var verify: String?,
-    var verify_date: Date?
+    var verify: String? = null
+    //var verify_date: Date?
 )

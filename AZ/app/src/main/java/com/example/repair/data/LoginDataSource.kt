@@ -1,12 +1,12 @@
 package com.example.repair.data
 
 import com.example.repair.AA
-import com.example.repair.data.model.Device
-import com.example.repair.data.model.MyCheck
-import com.example.repair.data.model.Repair
-import com.example.repair.data.model.User
+import com.example.repair.MyUser
+import com.example.repair.data.model.*
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import com.google.gson.reflect.TypeToken
+import kotlinx.android.synthetic.main.user.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -48,6 +48,12 @@ class LoginDataSource {
 
                 } else {
                     user = Gson().fromJson(a["user"], User::class.java)
+                    val aaaa = object : TypeToken<List<Dept>>() {
+                    }.rawType
+                    var depts: List<Dept> = Gson().fromJson(a["dept"], aaaa) as List<Dept>
+                    for (i in depts) {
+                        MyUser.depts.add(i.name)
+                    }
                     return Result.Success(user)
                 }
             } catch (e: Throwable) {
@@ -169,7 +175,7 @@ class LoginDataSource {
             AA::class.java
         )
 
-        if (check.img != null&&check.state.equals("待检验")) {
+        if (check.img != null && check.state.equals("待检验")) {
             val file = File(check.img)
 
             check.img = file.name
@@ -189,7 +195,7 @@ class LoginDataSource {
             } catch (e: Throwable) {
                 print(1)
             }
-        }else{
+        } else {
 
         }
 
@@ -204,7 +210,7 @@ class LoginDataSource {
 
     }
 
-    fun deleteMessage(id:Int){
+    fun deleteMessage(id: Int) {
         var aa = retrofit.create(
             AA::class.java
         )
@@ -229,20 +235,83 @@ class LoginDataSource {
 
     }
 
+    fun getStop(): MutableList<Stop> {
+        var aa = retrofit.create(
+            AA::class.java
+        )
+        var dd = aa.getStops().execute();
+        return dd.body();
 
-    fun addRepair(check: Repair): MyCheck {
+    }
+
+
+    fun addRepair(check: Repair): Repair {
 
 //        var map =HashMap<String,RequestBody>()
 //        map.put("file",File(device.img))
         var aa = retrofit.create(
             AA::class.java
         )
-        var gson = Gson();
-        var jsonData = gson.toJson(check);
-        val Mybody: RequestBody =
-            RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonData)
-        var dd = aa.changeCheck(Mybody).execute();
-        return dd.body()
+        if (check.img != null && check.state.equals("待接单")) {
+            val file = File(check.img)
+
+            check.img = file.name
+
+            var gson = Gson();
+            var jsonData = gson.toJson(check);
+
+            val Mybody: RequestBody =
+                RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonData)
+            val fileRQ = RequestBody.create(MediaType.parse("image/*"), file)
+            val part =
+                MultipartBody.Part.createFormData("file", file.getName(), fileRQ)
+
+            try {
+                var dd = aa.addRepair(Mybody, part).execute();
+                return dd.body()
+            } catch (e: Throwable) {
+                print(1)
+                var dd = aa.addRepair(Mybody, part).execute();
+                return dd.body()
+            }
+        } else if (check.rpImg != null && check.state.equals("待验收")) {
+            val file = File(check.rpImg)
+
+            check.rpImg = file.name
+
+            var gson = Gson();
+            var jsonData = gson.toJson(check);
+
+            val Mybody: RequestBody =
+                RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonData)
+            val fileRQ = RequestBody.create(MediaType.parse("image/*"), file)
+            val part =
+                MultipartBody.Part.createFormData("file", file.getName(), fileRQ)
+
+            try {
+                var dd = aa.addRepair(Mybody, part).execute();
+                return dd.body()
+            } catch (e: Throwable) {
+                print(1)
+                var dd = aa.addRepair(Mybody, part).execute();
+                return dd.body()
+            }
+        } else {
+            var gson = Gson();
+            var jsonData = gson.toJson(check);
+
+            val Mybody: RequestBody =
+                RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonData)
+            try {
+                var dd = aa.addRepair(Mybody).execute();
+                return dd.body()
+            } catch (e: Throwable) {
+                print(1)
+                var dd = aa.addRepair(Mybody).execute();
+                return dd.body()
+            }
+        }
+
     }
 
 
