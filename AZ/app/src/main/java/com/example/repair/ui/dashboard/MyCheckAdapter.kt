@@ -26,7 +26,6 @@ import kotlinx.coroutines.withContext
  *
  * @description: 点检适配
  *
- * @author: hsy
  *
  * @create: 2020-05-17 21:22
  **/

@@ -5,8 +5,7 @@ package com.example.repair.data.model
  *
  * @description: sad
  *
- * @author: hsy
  *
  * @create: 2020-05-22 00:12
  **/
-data  class Dept (val id:Int,val name:String)
+data  class Dept (val id:Int=0,val name:String)

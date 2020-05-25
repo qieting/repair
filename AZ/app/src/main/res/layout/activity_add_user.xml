@@ -101,16 +101,15 @@
         android:gravity="center_horizontal">
 
         <TextView
+            android:id="@+id/dept_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="部门"></TextView>
 
-        <EditText
-            android:id="@+id/dept"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:maxLength="7"></EditText>
+        <Spinner
+            android:id="@+id/spinnerDept"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <Button

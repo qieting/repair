@@ -13,7 +13,6 @@ import retrofit2.http.*
  *
  * @description: 数据访问Retrofit
  *
- * @author: hsy
  *
  * @create: 2020-05-15 21:35
  **/
@@ -70,4 +69,6 @@ interface AA {
     fun getStops(): Call<MutableList<Stop>>
 
 
+    @POST("dept")
+    fun adddEPT(@Body requestBody: RequestBody): Call<Dept>
 }

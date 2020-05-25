@@ -17,7 +17,6 @@ import kotlinx.android.synthetic.main.user.view.type
  *
  * @description: user的列表适配类
  *
- * @author: hsy
  *
  * @create: 2020-05-16 21:47
  **/

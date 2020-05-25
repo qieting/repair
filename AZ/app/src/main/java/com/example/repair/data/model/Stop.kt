@@ -5,7 +5,6 @@ package com.example.repair.data.model
  *
  * @description: 设别停用信息表
  *
- * @author: hsy
  *
  * @create: 2020-05-20 19:28
  **/

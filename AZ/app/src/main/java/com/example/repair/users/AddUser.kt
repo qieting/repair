@@ -6,13 +6,13 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.example.repair.App
+import com.example.repair.MyUser
 import com.example.repair.R
 import com.example.repair.data.LoginDataSource
 import com.example.repair.data.model.Device
 import com.example.repair.data.model.User
 import com.example.repair.ui.notifications.NotificationsViewModel
 import kotlinx.android.synthetic.main.activity_add_user.*
-import kotlinx.android.synthetic.main.activity_add_user.dept
 import kotlinx.android.synthetic.main.activity_add_user.name
 import kotlinx.android.synthetic.main.content_add_device.spinner
 import kotlinx.coroutines.CoroutineScope
@@ -31,6 +31,11 @@ class AddUser : AppCompatActivity() {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);     //设置下拉列表框的下拉选项样式
         spinner.setAdapter(adapter);
 
+        var adapter1 = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, MyUser.depts);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);     //设置下拉列表框的下拉选项样式
+        spinnerDept.setAdapter(adapter1);
+
+
         submit.setOnClickListener {
             if (name.text.length == 0) {
                 Toast.makeText(this, "名称不能为空", Toast.LENGTH_SHORT).show();
@@ -41,7 +46,7 @@ class AddUser : AppCompatActivity() {
 
                     var user = User(
                         name = name.text.toString(),
-                        dept = dept.text.toString(),
+                        dept = spinnerDept.selectedItem.toString(),
                         email = email.text.toString(),
                         mobile = mobile.text.toString(),
                         password = password.text.toString(),

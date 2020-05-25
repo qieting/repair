@@ -6,10 +6,10 @@ import com.example.repair.data.model.*
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
-import kotlinx.android.synthetic.main.user.*
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import org.json.JSONArray
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
@@ -48,16 +48,22 @@ class LoginDataSource {
 
                 } else {
                     user = Gson().fromJson(a["user"], User::class.java)
-                    val aaaa = object : TypeToken<List<Dept>>() {
-                    }.rawType
-                    var depts: List<Dept> = Gson().fromJson(a["dept"], aaaa) as List<Dept>
-                    for (i in depts) {
-                        MyUser.depts.add(i.name)
+                    var deptsARRAY =a["dept"].asJsonArray
+                    for(i in deptsARRAY){
+                        MyUser.depts.add(Gson().fromJson(i,Dept::class.java).name)
                     }
+//
+//                    val aaaa =
+//                        object : TypeToken<List<Dept>>() {}.type
+//                    var depts= Gson().fromJson(a["dept"], aaaa)
+//                    print(depts)
+//                    for (i in a["dept"] as JSONArray) {
+//                        MyUser.depts.add(i.name)
+//                    }
                     return Result.Success(user)
                 }
             } catch (e: Throwable) {
-
+                print(1)
             }
 
         }
@@ -313,6 +319,26 @@ class LoginDataSource {
         }
 
     }
+
+
+    fun addDept(device: Dept): Dept {
+
+//        var map =HashMap<String,RequestBody>()
+//        map.put("file",File(device.img))
+        var aa = retrofit.create(
+            AA::class.java
+        )
+
+        var gson = Gson();
+        var jsonData = gson.toJson(device);
+        val Mybody: RequestBody =
+            RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonData)
+
+
+        var dd = aa.adddEPT(Mybody).execute();
+        return dd.body()
+    }
+
 
 
     fun logout() {

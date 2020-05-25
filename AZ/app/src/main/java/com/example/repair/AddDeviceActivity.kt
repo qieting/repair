@@ -21,8 +21,6 @@ import com.example.repair.data.model.Device
 import com.example.repair.ui.notifications.NotificationsViewModel
 import kotlinx.android.synthetic.main.activity_add_device.*
 import kotlinx.android.synthetic.main.content_add_device.*
-import kotlinx.android.synthetic.main.content_add_device.name
-import kotlinx.android.synthetic.main.content_add_device.type
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -46,6 +44,11 @@ class AddDeviceActivity : AppCompatActivity() {
         var adapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, ctype);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);     //设置下拉列表框的下拉选项样式
         spinner.setAdapter(adapter);
+
+        var adapter1 =
+            ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, MyUser.depts);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);     //设置下拉列表框的下拉选项样式
+        spinnerDept.setAdapter(adapter1);
         chooseImg.setOnClickListener {
             var intent: Intent = Intent()
             intent.setAction("android.intent.action.GET_CONTENT")
@@ -55,7 +58,7 @@ class AddDeviceActivity : AppCompatActivity() {
         for (i in notificationsViewModel.devices.value!!) {
             if (i.id == id) {
                 device = i
-                dept.setText(device!!.dept)
+                dept_text.setText(device!!.dept)
                 loc.setText(device!!.loc)
                 for (i in 0..2) {
                     if (device!!.type.equals(ctype[i])) {
@@ -100,7 +103,7 @@ class AddDeviceActivity : AppCompatActivity() {
             }
 
         }
-        if(MyUser.user.type.equals("管理员")) {
+        if (MyUser.user.type.equals("管理员")) {
             fab.setOnClickListener {
 
                 if (name.text.length == 0) {
@@ -113,7 +116,7 @@ class AddDeviceActivity : AppCompatActivity() {
                         if (device != null) {
                             device = Device(
                                 id = device!!.id,
-                                dept = dept.text.toString(),
+                                dept = spinnerDept.selectedItem.toString(),
                                 loc = loc.text.toString(),
                                 lv = spinner.selectedItem.toString(),
                                 type = type.text.toString(),
@@ -131,7 +134,7 @@ class AddDeviceActivity : AppCompatActivity() {
                                 .change(device!!)
                         } else {
                             device = Device(
-                                dept = dept.text.toString(),
+                                dept = spinnerDept.selectedItem.toString(),
                                 loc = loc.text.toString(),
                                 lv = spinner.selectedItem.toString(),
                                 type = type.text.toString(),
@@ -160,9 +163,9 @@ class AddDeviceActivity : AppCompatActivity() {
 
                 }
             }
-        }else{
-            fab.visibility=GONE
-            chooseImg.visibility=GONE
+        } else {
+            fab.visibility = GONE
+            chooseImg.visibility = GONE
         }
 
     }

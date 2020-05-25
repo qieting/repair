@@ -194,8 +194,8 @@ public class PeopleServiceImpl implements PeopleService {
     }
 
     @Override
-    public void addDepe(Dept dept) {
-        deptRepository.save(dept);
+    public Dept addDepe(Dept dept) {
+        return deptRepository.save(dept);
     }
 
     public void save(MultipartFile file, String path) {

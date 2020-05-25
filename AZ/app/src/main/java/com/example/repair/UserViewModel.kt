@@ -8,7 +8,6 @@ import com.example.repair.data.model.User
  *
  * @description: 用户共享模板
  *
- * @author: hsy
  *
  * @create: 2020-05-16 21:14
  **/

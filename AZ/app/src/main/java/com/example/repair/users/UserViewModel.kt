@@ -16,7 +16,6 @@ import kotlinx.coroutines.withContext
  *
  * @description: 获取其他用户信息
  *
- * @author: hsy
  *
  * @create: 2020-05-16 21:48
  **/

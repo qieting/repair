@@ -8,7 +8,6 @@ import java.util.*
  *
  * @description: 消息通知
  *
- * @author: hsy
  *
  * @create: 2020-05-17 18:45
  **/

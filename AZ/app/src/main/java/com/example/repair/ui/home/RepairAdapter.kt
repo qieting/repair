@@ -26,7 +26,6 @@ import kotlinx.coroutines.withContext
  *
  * @description: 维修适配
  *
- * @author: hsy
  *
  * @create: 2020-05-18 13:41
  **/

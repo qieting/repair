@@ -7,7 +7,6 @@ import java.util.*
  *
  * @description: 点检
  *
- * @author: hsy
  *
  * @create: 2020-05-17 18:00
  **/

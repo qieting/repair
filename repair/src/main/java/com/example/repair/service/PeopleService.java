@@ -28,7 +28,7 @@ public interface PeopleService {
     List<Stop> findStops();
 
     List<Dept> getDepts();
-    void addDepe(Dept depe);
+    Dept addDepe(Dept depe);
 
 
 }

@@ -45,7 +45,6 @@ public class MyController {
     }
 
 
-
     @RequestMapping(value = "/device", method = RequestMethod.POST)
     public Device addDevice(@RequestParam("device") String device, @RequestParam(value = "file", required = false) MultipartFile file) {
         //     return peopleService.addDevice(device,file);
@@ -73,7 +72,6 @@ public class MyController {
     }
 
 
-
     @RequestMapping(value = "/mycheck", method = RequestMethod.GET)
     public List<MyCheck> getChecks() {
         return peopleService.getCheck();
@@ -88,7 +86,7 @@ public class MyController {
         return peopleService.changeMyCheck(myCheck, file);
     }
 
-    
+
     @RequestMapping(value = "/repair", method = RequestMethod.GET)
     public List<Repair> getRepairs() {
         return peopleService.getRepairs();
@@ -104,11 +102,15 @@ public class MyController {
     }
 
 
-
     @RequestMapping(value = "/stop", method = RequestMethod.GET)
     public List<Stop> getStops() {
         return peopleService.findStops();
     }
 
+    @RequestMapping(value = "/dept", method = RequestMethod.POST)
+    public Dept addPeople(@RequestBody Dept people) {
+
+        return peopleService.addDepe(people);
+    }
 
 }

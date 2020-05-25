@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.device.view.*
  *
  * @description: 设备列表展示信息
  *
- * @author: hsy
  *
  * @create: 2020-05-16 13:38
  **/

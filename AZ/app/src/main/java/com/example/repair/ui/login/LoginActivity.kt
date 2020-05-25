@@ -93,17 +93,21 @@ class LoginActivity : AppCompatActivity() {
 
             loading.visibility = View.GONE
             if (loginResult.error != null) {
-                showLoginFailed(loginResult.error)
+                Toast.makeText(applicationContext, "登录失败", Toast.LENGTH_SHORT).show()
             }
             if (loginResult.success != null) {
                 updateUiWithUser()
             }
-            setResult(Activity.RESULT_OK)
-
-            //Complete and destroy login activity once successful
-            finish()
+//            setResult(Activity.RESULT_OK)
+//
+//            //Complete and destroy login activity once successful
+//            finish()
         })
 
+
+        username.afterTextChanged(){
+
+        }
 
         username.afterTextChanged {
             loginViewModel.loginDataChanged(

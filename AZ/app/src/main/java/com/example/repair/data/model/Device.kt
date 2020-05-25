@@ -7,7 +7,6 @@ import java.util.*
  *
  * @description: 设备类
  *
- * @author: hsy
  *
  * @create: 2020-05-16 13:11
  **/

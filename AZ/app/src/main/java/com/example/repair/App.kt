@@ -10,7 +10,6 @@ import cn.bmob.v3.Bmob
  *
  * @description: application类
  *
- * @author: hsy
  *
  * @create: 2020-05-15 21:07
  **/
