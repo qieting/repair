@@ -30,7 +30,15 @@ import java.io.File
 
 class AddDeviceActivity : AppCompatActivity() {
     val ALBUM = 2
+    val ALBUMDJ = 3
+    val ALBUMWH = 4
+
+
+    var device_image: String? = null
     var message: String? = null;
+    var dj: String? = null
+    var wh: String? = null
+
     var device: Device? = null
     private lateinit var notificationsViewModel: NotificationsViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +63,19 @@ class AddDeviceActivity : AppCompatActivity() {
             intent.setType("image/*")
             startActivityForResult(intent, ALBUM)
         }
+        chooseImgdj.setOnClickListener {
+            var intent: Intent = Intent()
+            intent.setAction("android.intent.action.GET_CONTENT")
+            intent.setType("image/*")
+            startActivityForResult(intent, ALBUMDJ)
+        }
+        chooseImgwh.setOnClickListener {
+            var intent: Intent = Intent()
+            intent.setAction("android.intent.action.GET_CONTENT")
+            intent.setType("image/*")
+            startActivityForResult(intent, ALBUMWH)
+        }
+
         for (i in notificationsViewModel.devices.value!!) {
             if (i.id == id) {
                 device = i
@@ -67,13 +88,17 @@ class AddDeviceActivity : AppCompatActivity() {
                 }
                 type.setText(device!!.type)
                 name.setText(device!!.name)
-                dj.setText(device!!.dj)
-                wh.setText(device!!.wh)
+                Glide.with(this).load("${MyUser.host}images/${device!!.id}\$${device!!.dj}")
+                    .into(imgdj)
+                Glide.with(this).load("${MyUser.host}images/${device!!.id}\$${device!!.wh}")
+                    .into(imgwh)
                 if (device!!.img.equals("无")) {
                     device_img.setImageResource(R.drawable.device)
                 } else
                     Glide.with(this).load("${MyUser.host}images/${device!!.id}\$${device!!.img}")
                         .into(device_img)
+                chooseImgdj.visibility = GONE
+                chooseImgwh.visibility = GONE
                 chooseImg.setText("删除本设备")
                 chooseImg.setOnClickListener {
                     val builder: AlertDialog.Builder = AlertDialog.Builder(this)
@@ -121,9 +146,9 @@ class AddDeviceActivity : AppCompatActivity() {
                                 lv = spinner.selectedItem.toString(),
                                 type = type.text.toString(),
                                 name = name.text.toString(),
-                                img = message ?: "无",
-                                dj = dj.text.toString(),
-                                wh = wh.text.toString()
+                                img = device_image ?: "无",
+                                dj = dj!!,
+                                wh = wh!!
                             )
                             withContext(Dispatchers.IO) {
 
@@ -139,9 +164,9 @@ class AddDeviceActivity : AppCompatActivity() {
                                 lv = spinner.selectedItem.toString(),
                                 type = type.text.toString(),
                                 name = name.text.toString(),
-                                img = message ?: "无",
-                                dj = dj.text.toString(),
-                                wh = wh.text.toString()
+                                img = device_image ?: "无",
+                                dj = dj!!,
+                                wh = wh!!
                             )
                             var _li = withContext(Dispatchers.IO) {
 
@@ -166,6 +191,8 @@ class AddDeviceActivity : AppCompatActivity() {
         } else {
             fab.visibility = GONE
             chooseImg.visibility = GONE
+            chooseImgdj.visibility= GONE
+            chooseImgwh.visibility= GONE
         }
 
     }
@@ -178,7 +205,19 @@ class AddDeviceActivity : AppCompatActivity() {
                 if (resultCode == 0) {
                     Toast.makeText(baseContext, "未选择相应的图片", Toast.LENGTH_SHORT)
                 } else
-                    imageFromAlbum(data)
+                    imageFromAlbum(data, ALBUM)
+            }
+            ALBUMDJ -> {
+                if (resultCode == 0) {
+                    Toast.makeText(baseContext, "未选择相应的图片", Toast.LENGTH_SHORT)
+                } else
+                    imageFromAlbum(data, ALBUMDJ)
+            }
+            ALBUMWH -> {
+                if (resultCode == 0) {
+                    Toast.makeText(baseContext, "未选择相应的图片", Toast.LENGTH_SHORT)
+                } else
+                    imageFromAlbum(data, ALBUMWH)
             }
             else -> {
 
@@ -187,7 +226,7 @@ class AddDeviceActivity : AppCompatActivity() {
     }
 
     //获取从相册选择的图片
-    fun imageFromAlbum(data: Intent?) {
+    fun imageFromAlbum(data: Intent?, aaa: Int) {
         //如果安卓版本在4.4以上
         if (Build.VERSION.SDK_INT >= 19) {
             var imagePath: String? = null
@@ -218,13 +257,33 @@ class AddDeviceActivity : AppCompatActivity() {
             message = path
         }
         val file = File(message)
+        when (aaa) {
+            ALBUM -> {
+                device_image=message
+                Glide.with(this)
+                    .load(file).override(100, 100)
+                    //   .apply(mRequestOptions)
+                    .into(device_img)
+            }
+            ALBUMDJ -> {
+                dj=message
+                Glide.with(this)
+                    .load(file).override(100, 100)
+                    //   .apply(mRequestOptions)
+                    .into(imgdj)
+            }
+            ALBUMWH -> {
+                wh=message
+                Glide.with(this)
+                    .load(file).override(100, 100)
+                    //   .apply(mRequestOptions)
+                    .into(imgwh)
+            }
+        }
         //            RequestOptions mRequestOptions = RequestOptions.circleCropTransform()
 //                    .diskCacheStrategy(DiskCacheStrategy.NONE)//不做磁盘缓存
 //                    .skipMemoryCache(true);//不做内存缓存
-        Glide.with(this)
-            .load(file).override(100, 100)
-            //   .apply(mRequestOptions)
-            .into(device_img)
+
 
     }
 

@@ -105,7 +105,7 @@ class LoginActivity : AppCompatActivity() {
         })
 
 
-        username.afterTextChanged(){
+        username.afterTextChanged() {
 
         }
 
@@ -167,9 +167,10 @@ class LoginActivity : AppCompatActivity() {
 
         MyUser.user = loginViewModel.loginResult.value!!.success!!;
 
-      //  if(MyUser.user.type.equals("在线"))
+        //  if(MyUser.user.type.equals("在线"))
         var intent: Intent = Intent(baseContext, MainActivity::class.java);
         startActivity(intent)
+        finish()
     }
 
     private fun showLoginFailed(@StringRes errorString: Int) {

@@ -13,6 +13,8 @@ import android.view.View.GONE
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.repair.App
 import com.example.repair.MyUser
@@ -20,7 +22,9 @@ import com.example.repair.R
 import com.example.repair.data.LoginDataSource
 import com.example.repair.data.model.Device
 import com.example.repair.data.model.MyCheck
+import com.example.repair.ui.ImageActivity
 import com.example.repair.ui.home.AddRepair
+import com.example.repair.ui.notifications.NotificationsViewModel
 import kotlinx.android.synthetic.main.activity_add_check.*
 import kotlinx.android.synthetic.main.activity_add_check.chooseImg
 import kotlinx.android.synthetic.main.activity_add_check.spinner
@@ -35,6 +39,8 @@ class AddCheck : AppCompatActivity() {
     var message: String? = null;
     val ALBUM = 2
     lateinit var device: MyCheck
+
+    var list: MutableList<String> = ArrayList<String>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_check)
@@ -42,6 +48,10 @@ class AddCheck : AppCompatActivity() {
         val notificationsViewModel =
             ViewModelProvider(application as App).get(DashboardViewModel::class.java)
         var devices = notificationsViewModel.checks.value;
+        val recyclerView = findViewById<RecyclerView>(R.id.posts_recycle)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        val deviceAdapter = BzAdapter(list)
+        recyclerView.adapter = deviceAdapter
         if (devices == null) {
             Toast.makeText(this, "找不到该点检信息", Toast.LENGTH_SHORT).show();
         } else {
@@ -51,6 +61,24 @@ class AddCheck : AppCompatActivity() {
                     break
                 }
             }
+            val notificationsViewModel =
+                ViewModelProvider(this.application as App).get(NotificationsViewModel::class.java)
+            for (i in notificationsViewModel.devices.value!!) {
+                if (i.id == device.device_id) {
+                    dj.setOnClickListener {
+                        var intent: Intent = Intent(this, ImageActivity::class.java)
+                        intent.putExtra("path", "${MyUser.host}images/${i!!.id}\$${i!!.dj}")
+                        startActivity(intent)
+                    }
+                    wh.setOnClickListener {
+                        var intent: Intent = Intent(this, ImageActivity::class.java)
+                        intent.putExtra("path", "${MyUser.host}images/${i!!.id}\$${i!!.wh}")
+                        startActivity(intent)
+                    }
+                    break
+                }
+            }
+
 
             chooseImg.setOnClickListener {
                 var intent: Intent = Intent()
@@ -68,7 +96,7 @@ class AddCheck : AppCompatActivity() {
                 if (device != null) {
 
                     device.comment =
-                        spinner.selectedItem.toString() + "$" + comment.text.toString()
+                        spinner.selectedItem.toString() + "$" + deviceAdapter.getAll()
                     device.img = message
                     device.state = "待检验"
 
@@ -94,13 +122,19 @@ class AddCheck : AppCompatActivity() {
                 }
             }
         }
+        list.add("")
         if (MyUser.user.type.equals("管理员")) {
-            comment.setText(
-                device
-                    .comment!!
-            )
-            comment.isEnabled = false
-
+            dj.visibility = GONE
+            wh.visibility = GONE
+            deviceAdapter.setEnable(false)
+            val aaaaaaa = device.comment!!.split("$")[1].split("#!@")
+            list.clear()
+            for (i in aaaaaaa) {
+                list.add(i)
+            }
+            list.removeAt(0)
+            deviceAdapter.notifyDataSetChanged()
+            result.setText("点检结果：${device.comment!!.split("$")[0]}")
             spinner.visibility = GONE
             Glide.with(this).load("${MyUser.host}images/${device!!.id}!${device!!.img}")
                 .into(img)
@@ -124,6 +158,7 @@ class AddCheck : AppCompatActivity() {
         }
 
     }
+
 
     //处理返回的事件
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

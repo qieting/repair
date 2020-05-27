@@ -6,22 +6,44 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/dj"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="点检">
+
+        </Button>
+
+        <Button
+            android:id="@+id/wh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="维护">
+
+        </Button>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal">
+
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="点检备注"></TextView>
 
-        <EditText
-            android:id="@+id/comment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint=""
-            android:maxLength="50"></EditText>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/posts_recycle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,6 +52,7 @@
         android:gravity="center_horizontal">
 
         <TextView
+            android:id="@+id/result"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="点检结果"></TextView>
@@ -52,7 +75,9 @@
         android:layout_height="wrap_content"
         android:maxWidth="200dp"
         android:maxHeight="200dp"
-        android:minHeight="100dp"></ImageView>
+        android:minWidth="100dp"
+        android:minHeight="100dp"
+        android:scaleType="fitXY"></ImageView>
 
     <Button
         android:id="@+id/submit"

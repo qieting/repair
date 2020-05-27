@@ -33,7 +33,7 @@ interface AA {
 
     @Multipart
     @POST("device")
-    fun addDevice(@Part("device") requestBody: RequestBody, @Part file: MultipartBody.Part): Call<Device>
+    fun addDevice(@Part file: List<MultipartBody.Part>): Call<Device>
 
     @Multipart
     @POST("device")
@@ -58,6 +58,7 @@ interface AA {
     @Multipart
     @POST("repair")
     fun addRepair(@Part("repair") requestBody: RequestBody, @Part file: MultipartBody.Part): Call<Repair>
+
     @Multipart
     @POST("repair")
     fun addRepair(@Part("repair") requestBody: RequestBody): Call<Repair>

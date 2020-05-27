@@ -7,7 +7,11 @@ import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,13 +49,13 @@ public class MyController {
     }
 
 
+
+
     @RequestMapping(value = "/device", method = RequestMethod.POST)
-    public Device addDevice(@RequestParam("device") String device, @RequestParam(value = "file", required = false) MultipartFile file) {
-        //     return peopleService.addDevice(device,file);
-        System.out.println(1);
-        Device device1 = new Gson().fromJson(device, Device.class);
-        return peopleService.addDevice(device1, file);
+    public Device addOnLineOrder( String device, @RequestParam(required = false) MultipartFile f1, @RequestParam(required = false) MultipartFile f2, @RequestParam(required = false) MultipartFile f3) {
+        return peopleService.addDevice(new Gson().fromJson(device,Device.class),f1,f2,f3);
     }
+
 
 
     @RequestMapping(value = "/device", method = RequestMethod.GET)

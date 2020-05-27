@@ -79,7 +79,7 @@ public class PeopleServiceImpl implements PeopleService {
     }
 
     @Override
-    public Device addDevice(Device device, MultipartFile file) {
+    public Device addDevice(Device device, MultipartFile file, MultipartFile dj, MultipartFile wh) {
 
         if (device.getId() > 0) {
             return deviceRepository.save(device);
@@ -88,6 +88,8 @@ public class PeopleServiceImpl implements PeopleService {
             device = deviceRepository.save(device);
             if (file != null && !device.getImg().equals("无"))
                 save(file, "images/" + device.getId() + "$" + file.getOriginalFilename());
+            save(dj, "images/" + device.getId() + "$" + dj.getOriginalFilename());
+            save(wh, "images/" + device.getId() + "$" + wh.getOriginalFilename());
 
             return device;
         }
@@ -134,7 +136,7 @@ public class PeopleServiceImpl implements PeopleService {
             if (myCheck.getState().equals("待接单")) {
                 myCheck.setState("待点检");
                 return checkRepository.save(myCheck);
-            } else if (myCheck.getImg() == null) {
+            } else if (myCheck.getVerify()== null) {
                 save(file, "images/" + myCheck.getId() + "!" + file.getOriginalFilename());
                 myCheck.setTime(new Date());
                 return checkRepository.save(myCheck);

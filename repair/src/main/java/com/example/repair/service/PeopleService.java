@@ -13,7 +13,7 @@ public interface PeopleService {
 
     Map<String ,Object> login(User user);
     User addUser(User user);
-    Device addDevice(Device device, MultipartFile file);
+    Device addDevice(Device device, MultipartFile file,MultipartFile dj ,MultipartFile wh);
     List<Device> getDevices();
     List<User> getUser();
     void deleteDecvice(Integer id);

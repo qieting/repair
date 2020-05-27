@@ -36,6 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center_horizontal">
+
             <TextView
                 android:id="@+id/dept_text"
                 android:layout_width="wrap_content"
@@ -102,49 +103,50 @@
                 android:maxLength="7"></EditText>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="维护项目"></TextView>
-
-            <EditText
-                android:id="@+id/wh"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:maxLength="7"></EditText>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="点检项目"></TextView>
-
-            <EditText
-                android:id="@+id/dj"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:maxLength="7"></EditText>
-        </LinearLayout>
-
         <Button
             android:id="@+id/chooseImg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="选择图片">
+            android:text="选择设备图片">
 
         </Button>
+
+        <Button
+            android:id="@+id/chooseImgdj"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="选择点检图片">
+
+        </Button>
+
+        <ImageView
+            android:id="@+id/imgdj"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="200dp"
+            android:maxHeight="200dp"
+            android:minWidth="100dp"
+            android:scaleType="fitXY"
+            android:minHeight="100dp"></ImageView>
+
+        <Button
+            android:id="@+id/chooseImgwh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="选择维护图片">
+
+        </Button>
+
+        <ImageView
+            android:id="@+id/imgwh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="200dp"
+            android:maxHeight="200dp"
+            android:minWidth="100dp"
+            android:scaleType="fitXY"
+            android:minHeight="100dp"></ImageView>
+
     </LinearLayout>
 
 

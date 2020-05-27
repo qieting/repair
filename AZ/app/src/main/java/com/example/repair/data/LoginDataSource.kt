@@ -5,11 +5,9 @@ import com.example.repair.MyUser
 import com.example.repair.data.model.*
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import com.google.gson.reflect.TypeToken
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import org.json.JSONArray
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.File
@@ -48,9 +46,9 @@ class LoginDataSource {
 
                 } else {
                     user = Gson().fromJson(a["user"], User::class.java)
-                    var deptsARRAY =a["dept"].asJsonArray
-                    for(i in deptsARRAY){
-                        MyUser.depts.add(Gson().fromJson(i,Dept::class.java).name)
+                    var deptsARRAY = a["dept"].asJsonArray
+                    for (i in deptsARRAY) {
+                        MyUser.depts.add(Gson().fromJson(i, Dept::class.java).name)
                     }
 //
 //                    val aaaa =
@@ -139,25 +137,41 @@ class LoginDataSource {
             var dd = aa.addDevice(Mybody).execute();
             return dd.body()
         }
-
         val file = File(device.img)
-
+        val dj = File(device.dj)
+        val wh = File(device.wh)
+        device.dj = dj.name
+        device.wh = wh.name
         device.img = file.name
 
         var gson = Gson();
         var jsonData = gson.toJson(device);
 
-        val Mybody: RequestBody =
-            RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonData)
-        val fileRQ = RequestBody.create(MediaType.parse("image/*"), file)
-        val part =
-            MultipartBody.Part.createFormData("file", file.getName(), fileRQ)
+//        val Mybody: RequestBody =
+//            RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonData)
 
 
-        var dd = aa.addDevice(Mybody, part).execute();
+        var builder = MultipartBody.Builder()
+            .setType(MultipartBody.FORM).addFormDataPart("device",jsonData)
+        val imageBody =
+            RequestBody.create(MediaType.parse("multipart/form-data"), file)
+        val imageBody1 =
+            RequestBody.create(MediaType.parse("multipart/form-data"), dj)
+        val imageBody2 =
+            RequestBody.create(MediaType.parse("multipart/form-data"), wh)
+        builder.addFormDataPart("f1", file.name, imageBody)
+        builder.addFormDataPart("f2", dj.name, imageBody1)
+        builder.addFormDataPart("f3", wh.name, imageBody2)
+
+        try {
+            var dd = aa.addDevice( builder.build().parts()).execute();
+            return dd.body()
+
+        } catch (e: Throwable) {
+            print(1)
+        }
+        var dd = aa.addDevice( builder.build().parts()).execute();
         return dd.body()
-
-
     }
 
 
@@ -338,7 +352,6 @@ class LoginDataSource {
         var dd = aa.adddEPT(Mybody).execute();
         return dd.body()
     }
-
 
 
     fun logout() {

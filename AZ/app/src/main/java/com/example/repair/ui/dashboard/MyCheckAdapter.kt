@@ -12,9 +12,7 @@ import com.example.repair.App
 import com.example.repair.MyUser
 import com.example.repair.R
 import com.example.repair.data.LoginDataSource
-import com.example.repair.data.model.Device
 import com.example.repair.data.model.MyCheck
-import com.example.repair.ui.notifications.NotificationsViewModel
 import kotlinx.android.synthetic.main.check.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
