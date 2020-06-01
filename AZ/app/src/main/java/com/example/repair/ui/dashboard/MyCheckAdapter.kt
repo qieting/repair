@@ -6,13 +6,16 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.repair.App
 import com.example.repair.MyUser
 import com.example.repair.R
 import com.example.repair.data.LoginDataSource
+import com.example.repair.data.model.Device
 import com.example.repair.data.model.MyCheck
+import com.example.repair.ui.notifications.NotificationsViewModel
 import kotlinx.android.synthetic.main.check.view.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +30,14 @@ import kotlinx.coroutines.withContext
  *
  * @create: 2020-05-17 21:22
  **/
-class MyCheckAdapter(var checks: MutableList<MyCheck>) : RecyclerView.Adapter<MyHoleder>() {
+class MyCheckAdapter(var checks: MutableList<MyCheck>, var deviceds: MutableList<Device>) :
+    RecyclerView.Adapter<MyHoleder>() {
+
+
+    fun changeDevice(devicedsss: MutableList<Device>) {
+        deviceds = devicedsss
+    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHoleder {
         val inflate = LayoutInflater.from(parent?.context).inflate(
@@ -41,19 +51,21 @@ class MyCheckAdapter(var checks: MutableList<MyCheck>) : RecyclerView.Adapter<My
     }
 
     override fun onBindViewHolder(holder: MyHoleder, position: Int) {
-        holder.bind(checks[position])
+        bind(checks[position], holder.itemView)
     }
 
-
-}
-
-class MyHoleder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-    fun bind(check: MyCheck) {
+    fun bind(check: MyCheck, itemView: View) {
         var sss = (check.user?.toString() ?: "暂无")
         itemView.iid.text = "id:${check.id.toString()}";
         itemView.user.text = "点检员id：" + sss
         itemView.status.text = check.state
+        for (i in deviceds) {
+            if (i.id == check.device_id) {
+                itemView.device_name.setText(i.name);
+                break
+            }
+        }
+
         itemView.device_id.text = "设备id:" + check.device_id.toString()
         itemView.status.setOnClickListener {
             if (MyUser.user.type.equals("管理员")) {
@@ -96,4 +108,10 @@ class MyHoleder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         }
     }
+
+}
+
+class MyHoleder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+
 }

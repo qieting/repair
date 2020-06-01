@@ -17,8 +17,14 @@ import com.example.repair.App
 import com.example.repair.MyUser
 import com.example.repair.R
 import com.example.repair.data.model.Device
+import com.example.repair.data.model.MyCheck
 import com.example.repair.data.model.Repair
+import com.example.repair.ui.dashboard.DashboardViewModel
+import com.example.repair.ui.dashboard.MyCheckAdapter
+import com.example.repair.ui.login.LoginActivity
 import com.example.repair.ui.notifications.DeviceAdapter
+import com.example.repair.ui.notifications.NotificationsViewModel
+import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : Fragment() {
 
@@ -39,7 +45,20 @@ class HomeFragment : Fragment() {
 //        })
         val recyclerView = root.findViewById<RecyclerView>(R.id.posts_recycle)
         recyclerView.layoutManager = LinearLayoutManager(root.context)
-        val deviceAdapter = RepairAdapter(repairs);
+        var sada =
+            ViewModelProvider(activity!!.application as App).get(NotificationsViewModel::class.java)
+        var sda =
+            ViewModelProvider(activity!!.application as App).get(DashboardViewModel::class.java)
+        val deviceAdapter = RepairAdapter(repairs,ArrayList<Device>(),ArrayList<MyCheck>());
+        sada.devices.observe(viewLifecycleOwner, Observer {
+            deviceAdapter.changeDevice(it)
+        })
+        val out = root.findViewById<Button>(R.id.out)
+        out.setOnClickListener {
+            var intent = Intent(context, LoginActivity::class.java)
+            startActivity(intent)
+            activity!!.finish()
+        }
         val add_repair = root.findViewById<Button>(R.id.add_check)
         add_repair.setOnClickListener {
             var intent = Intent(context, AddRepair::class.java)
@@ -57,7 +76,10 @@ class HomeFragment : Fragment() {
                     if (i.state.equals("待接单")) {
                         repairsNoUser.add(i)
                     } else
-                        if (MyUser.user.type.equals("管理员") || i.user.equals(MyUser.user.name)||i.fuser!!.equals(MyUser.user.name)) {
+                        if (MyUser.user.type.equals("管理员") || i.user.equals(MyUser.user.name) || i.fuser!!.equals(
+                                MyUser.user.name
+                            )
+                        ) {
                             if (i.state.equals("已完成")) {
                                 repairsFinish.add(i)
                             } else if (i.state.equals("待验收")) {

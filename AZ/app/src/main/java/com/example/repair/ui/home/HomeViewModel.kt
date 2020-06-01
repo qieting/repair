@@ -30,6 +30,10 @@ class HomeViewModel : ViewModel() {
     val repairs: LiveData<MutableList<Repair>> = _list
 
 
+    fun clear(){
+        _list?.value?.clear()
+    }
+
     fun add(user: Repair) {
         if (_list.value == null) {
             _list.value = ArrayList()

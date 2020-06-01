@@ -56,11 +56,6 @@ public class PeopleServiceImpl implements PeopleService {
     public Map<String, Object> login(User user) {
 
         Map<String, Object> map = new HashMap<>();
-//        if(user.getName()!=null){
-//            user =userRepository.save(user);
-//            map.put("user",user);
-//            return map;
-//        }
         User user1 = userRepository.findByMobile(user.getMobile());
         if (user1 != null && user.getPassword().equals(user1.getPassword())) {
             map.put("status", 1);
@@ -147,7 +142,6 @@ public class PeopleServiceImpl implements PeopleService {
 
         }
     }
-
     @Override
     public Repair changeRepari(Repair repair, MultipartFile file) {
         if (repair.getState().equals("待接单")) {
@@ -155,8 +149,9 @@ public class PeopleServiceImpl implements PeopleService {
             repair.setState("待接单");
             Stop stop = new Stop();
             stop.setDevice(repair.getDevice_Id());
-            stop.setComment(repair.getPart());
             stop.setGmtTime(new Date());
+            stop.setComment(repair.getPart());
+
             stopRepository.save(stop);
             save(file, "images/" + repair.getId() + "@" + file.getOriginalFilename());
             return repair;

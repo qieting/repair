@@ -65,6 +65,7 @@ class AddCheck : AppCompatActivity() {
                 ViewModelProvider(this.application as App).get(NotificationsViewModel::class.java)
             for (i in notificationsViewModel.devices.value!!) {
                 if (i.id == device.device_id) {
+                    name.setText(i.name)
                     dj.setOnClickListener {
                         var intent: Intent = Intent(this, ImageActivity::class.java)
                         intent.putExtra("path", "${MyUser.host}images/${i!!.id}\$${i!!.dj}")
@@ -110,6 +111,7 @@ class AddCheck : AppCompatActivity() {
                             .repalce(_li)
                         if (!spinner.selectedItem.toString().equals("正常")) {
                             var intent = Intent(this@AddCheck, AddRepair::class.java)
+                            intent.putExtra("iii",_li.device_id)
                             startActivityForResult(intent, 785)
                         } else
                             finish()

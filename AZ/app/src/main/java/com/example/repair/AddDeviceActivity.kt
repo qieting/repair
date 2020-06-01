@@ -79,6 +79,8 @@ class AddDeviceActivity : AppCompatActivity() {
         for (i in notificationsViewModel.devices.value!!) {
             if (i.id == id) {
                 device = i
+                dj=device!!.dj
+                wh=device!!.dj
                 dept_text.setText(device!!.dept)
                 loc.setText(device!!.loc)
                 for (i in 0..2) {

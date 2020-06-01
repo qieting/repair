@@ -8,6 +8,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.repair.ui.dashboard.DashboardViewModel
 import com.example.repair.ui.notifications.NotificationsViewModel
 
 class MainActivity : AppCompatActivity() {
@@ -20,6 +21,7 @@ class MainActivity : AppCompatActivity() {
             ViewModelProvider(application as App).get(
                 NotificationsViewModel::class.java
             )
+        ViewModelProvider(application as App).get(DashboardViewModel::class.java)
 
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each

@@ -127,7 +127,11 @@ class DashboardFragment : Fragment() {
 
         val recyclerView = root.findViewById<RecyclerView>(R.id.posts_recycle)
         recyclerView.layoutManager = LinearLayoutManager(root.context)
-        val deviceAdapter = MyCheckAdapter(checks);
+        var  sada =ViewModelProvider(activity!!.application as App).get(NotificationsViewModel::class.java)
+        val deviceAdapter = MyCheckAdapter(checks,sada.devices.value!!);
+        sada.devices.observe(viewLifecycleOwner, Observer {
+            deviceAdapter.changeDevice(it)
+        })
         recyclerView.adapter = deviceAdapter
         dashboardViewModel.checks.observe(viewLifecycleOwner, Observer {
             if (it != null && it.size > 0) {

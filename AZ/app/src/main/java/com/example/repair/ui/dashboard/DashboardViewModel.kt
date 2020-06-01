@@ -13,6 +13,25 @@ import kotlinx.coroutines.withContext
 
 class DashboardViewModel : ViewModel() {
 
+
+//    fun iii(){
+//        if(_list!=null)
+//        CoroutineScope(Dispatchers.Main).launch {
+//
+//            var _li = withContext(Dispatchers.IO) {
+//
+//                LoginDataSource().getChecks()
+//            }
+//
+//            _li
+//
+//        }
+//    }
+
+    fun clear(){
+        _list?.value?.clear()
+    }
+
     private val _list = MutableLiveData<MutableList<MyCheck>>().apply {
         CoroutineScope(Dispatchers.Main).launch {
 
@@ -29,6 +48,7 @@ class DashboardViewModel : ViewModel() {
         }
     }
     val checks: LiveData<MutableList<MyCheck>> = _list
+
 
 
     fun add(mycheck :MyCheck){

@@ -20,6 +20,7 @@ import com.example.repair.MyUser
 import com.example.repair.R
 import com.example.repair.data.LoginDataSource
 import com.example.repair.data.model.Repair
+import com.example.repair.ui.notifications.NotificationsViewModel
 import kotlinx.android.synthetic.main.activity_add_repair.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -34,6 +35,11 @@ class AddRepair : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_repair)
+        var iii = intent.getIntExtra("iii", 0);
+        if(iii!=0){
+            iid.setText(iii.toString())
+        }
+
         val iiiii = intent.getIntExtra("id", 0);
         if (iiiii != 0) {
             val list =
@@ -41,9 +47,12 @@ class AddRepair : AppCompatActivity() {
             for (i in list!!) {
                 if (i.id == iiiii) {
                     repair = i
+                    iii=repair!!.device_Id
                     break
                 }
             }
+        }else{
+            asdadsda.visibility= GONE
         }
         chooseImg.setOnClickListener {
             var intent: Intent = Intent()
@@ -81,11 +90,22 @@ class AddRepair : AppCompatActivity() {
 
         }
         if (repair != null) {
+
+            val list =
+                ViewModelProvider(application as App).get(NotificationsViewModel::class.java).devices.value!!
+            for(iii in list){
+                if(iii.id==repair!!.device_Id){
+                    nname.setText(iii.name)
+                    break
+                }
+            }
+
             iid.isEnabled=false
             comment.setText(repair!!.comment)
             comment.isEnabled = false
             spinner.visibility = GONE
             spinneraaa.setText("保修部位：     ${repair!!.part}")
+
             iid.setText(repair!!.device_Id.toString())
             Glide.with(this).load("${MyUser.host}images/${repair!!.id}@${repair!!.img}")
                 .into(img)
@@ -135,7 +155,7 @@ class AddRepair : AppCompatActivity() {
             fcomment.setText("${repair!!.remark}")
             fcomment.isEnabled=false
             chooseImg1.visibility= GONE
-            dasdsada.setText("是否使用配件：${repair!!.spa}")
+            dasdsada.setText("是否使用备件：${repair!!.spa}")
             Glide.with(this).load("${MyUser.host}images/${repair!!.id}@${repair!!.rpImg}")
                 .into(img1)
             submit1.setText("检验完成")

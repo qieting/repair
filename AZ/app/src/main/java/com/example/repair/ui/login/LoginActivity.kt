@@ -138,26 +138,30 @@ class LoginActivity : AppCompatActivity() {
 
             login.setOnClickListener {
                 loading.visibility = View.VISIBLE
-                try {
-                    loginViewModel.login(username.text.toString(), password.text.toString())
-                } catch (e: Exception) {
-                    print(e.message)
+
+                if(username.text.toString().startsWith("10000")){
+                    BmobSMS.verifySmsCode(username.text.toString(),messageEdt.text.toString(),object :UpdateListener(){
+                        override fun done(p0: BmobException?) {
+                            if(p0==null){
+                                loginViewModel.login(username.text.toString(), password.text.toString())
+                            }else{
+                                Toast.makeText(
+                                    applicationContext,
+                                    "短信验证码验证失败，${p0.message}",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                                loading.visibility=View.INVISIBLE
+                            }
+                        }
+                    })
+                }else{
+                    try {
+                        loginViewModel.login(username.text.toString(), password.text.toString())
+                    } catch (e: Exception) {
+                        print(e.message)
+                    }
                 }
 
-//                BmobSMS.verifySmsCode(username.text.toString(),messageEdt.text.toString(),object :UpdateListener(){
-//                    override fun done(p0: BmobException?) {
-//                        if(p0==null){
-//                            loginViewModel.login(username.text.toString(), password.text.toString())
-//                        }else{
-//                            Toast.makeText(
-//                                applicationContext,
-//                                "短信验证码验证失败，${p0.message}",
-//                                Toast.LENGTH_LONG
-//                            ).show()
-//                            loading.visibility=View.INVISIBLE
-//                        }
-//                    }
-//                })
 
             }
         }
@@ -170,6 +174,7 @@ class LoginActivity : AppCompatActivity() {
         //  if(MyUser.user.type.equals("在线"))
         var intent: Intent = Intent(baseContext, MainActivity::class.java);
         startActivity(intent)
+        loginViewModel.clear()
         finish()
     }
 

@@ -28,6 +28,14 @@
             app:layout_constraintLeft_toRightOf="@id/iid"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/device_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            app:layout_constraintLeft_toRightOf="@id/device_id"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <Button
             android:id="@+id/status"
             android:background="@null"
